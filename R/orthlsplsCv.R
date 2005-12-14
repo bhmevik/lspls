@@ -1,0 +1,138 @@
+###
+### Orthogonal case, cross-validation
+###
+
+## The algorithm is based on recursion, after X has been handled.
+
+orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
+                        segments = 10, segment.type = c("random",
+                                       "consecutive", "interleaved"),
+                        length.seg) {
+
+    ## The recursive function:
+    ## It uses the following variables from orthlsplsCv
+    ## - Z: list of spectral matrices
+    ## - A: list of #comps to use in the CV
+    ## - segment: indices of the segment to be predicted
+    ## - cvPreds: array of predictions; dim: c(nObs, nResp, unlist(A))
+    ## - pls.fit: the pls fit function
+    cvPredRest <- function(indices, prevCalib, prevPred, prevComps, prevRes) {
+        ## indices is the indices of the remaining matrices
+        ## prevCalib is a matrix with the X vars and scores used in the
+        ##   previous calibrations
+        ## prevPred is a matrix with the X vars and scores used in the
+        ##   previous predictions
+        ## prevComps is the numbers of components used in the previous
+        ##   calibrations
+        ## prevRes is the residuals from the previous calibrations
+
+        ## Orthogonalise the calibration spectra wrt. prevVars
+        Mcal <- Z[[indices[1]]][-segment,]
+        Mo <- orth(Mcal, prevCalib)
+
+        ## Orthogonalise the prediction spectra
+        Mpred <- Z[[indices[1]]][segment,]
+        Mpo <- Mpred - prevPred %*% Corth(Mcal, prevCalib) ## FIXME: check!
+        ## mal: Zorig[i,] - Xorig[i,] %*% Co(Xorig[-i,]) %*% Zorig[-i,]
+
+        ## Estimate a model prevRes ~ orth. spectra + res
+        plsM <- pls.fit(Mo, prevRes, A[[indices[1]]])
+        ## Save scores:
+        S <- plsM$scores
+
+        ## Predict new scores and response values
+        predScores <- sweep(Mpo, 2, plsM$Xmeans) %*% plsM$projection
+        ## FIXME: Only for orth.scores?
+        predVals <- array(dim = c(nrow(predScores), dim(plsM$Yloadings)))
+        for (a in 1:A[[indices[1]]])
+            predVals[,,a] <-
+                sweep(predScores[,1:a] %*% t(plsM$Yloadings[,1:a, drop=FALSE]),
+                      2, plsM$Ymeans, "+")
+
+        ## Add the predictions to the outer cvPreds variable
+        ## Alt. 1:  Calculate the 1-index indices manuall, and use
+        ## single indexing (probably quickest, but requires a loop).
+        ## Alt. 2:  Use matrix indexing with an expanded grid.
+        ##eg <- expand.grid(segment, 1:nResp, A[[indices[1]]])
+        ##indMat <- do.call("cbind", c(eg[1:2], as.list(prevComps), eg[3]))
+        ##cvPreds[indMat] <- cvPreds[indMat] + predVals
+        ## Alt. 3: Build and eval an expression which does what we want:
+        nprev <- length(prevComps)
+        nrest <- length(dim(cvPreds)) - nprev - 2
+        dummy <- Quote(cvPreds[segment,])
+        dummy[4 + seq(along = prevComps)] <- prevComps
+        dummy[4 + nprev + 1:nrest] <- dummy[rep(4, nrest)]
+        eval(substitute(dummy <<- dummy + c(predVals), list(dummy = dummy)))
+
+        ## Return if this is the last matrix/set of matrices
+        if (length(indices) == 1) return()
+
+        ## Calculate new residuals
+        newResid <- - plsM$fitted.values + c(prevRes)
+
+        ## To save space: drop the model object(s)
+        rm(plsM)
+
+        ## Recursively call ourself for each number of components in the present
+        ## model(s)
+        for (i in seq(length = A[[indices[1]]]))
+            Recall(indices[-1], # Remove the index of the current matrix/ces
+                   cbind(prevCalib, S[,1:i]), # Add the scores we've used
+                   cbind(prevPred, predScores[,1:i, drop=FALSE]), # Add the scores we've predicted
+                   c(prevComps, i), # and the number of comps
+                   newResid[,,i]) # update the residual
+    } ## recursive function
+
+    ## Setup:
+    nObs <- nrow(X)
+    nResp <- ncol(Y)
+    ## cvPreds: the cross-validated predictions:
+    cvPreds <- array(0, dim = c(nObs, nResp, unlist(A)))
+    ## Build an unevaluated expression that will insert the predictions into
+    ## cvPreds[segment,,...,] when evaluated:
+    ndim <- length(dim(cvPreds))
+    ## This creates an expression with the empty index argument repeated as
+    ## many times as neccessary:
+    dummy <- Quote(cvPreds[segment,])[c(1:3, rep(4, ndim - 1))]
+    ## Substitute this in an assignment statement:
+    addPredictions <- substitute(dummy <- predVals, list(dummy = dummy))
+
+    ## FIXME: Maybe in outer function:
+    method <- match.arg(method, c("oscorespls", "kernelpls", "simpls"))
+    pls.fit <- switch(method, oscorespls = oscorespls.fit,
+                      kernelpls = kernelpls.fit, simpls = simpls.fit)
+
+    ## Set up segments:
+    if (is.list(segments)) {
+        if (is.null(attr(segments, "type")))
+            attr(segments, "type") <- "user supplied"
+    } else {
+        if (missing(length.seg)) {
+            segments <- cvsegments(nObs, k = segments, type = segment.type)
+        } else {
+            segments <- cvsegments(nObs, length.seg = length.seg,
+                                   type = segment.type)
+        }
+    }
+
+    ## The main cross-validation loop
+    temp <- 0
+    for (segment in segments) {
+        cat(temp <- temp + 1, "")
+        ## Handle X
+        lsX <- lm.fit(X[-segment,, drop = FALSE], Y[-segment,, drop = FALSE])
+        resid <- lsX$residuals
+        predVals <- X[segment,, drop = FALSE] %*% lsX$coefficients
+
+        ## Insert the predictions into the cvPred array:
+        eval(addPredictions)
+
+        ## Handle the rest of the matrices:
+        cvPredRest(indices = 1:length(unlist(A)),
+                   prevCalib = X[-segment,, drop = FALSE],
+                   prevPred = X[segment,, drop = FALSE],
+                   prevComps = c(),
+                   prevRes = resid)
+    }
+    return(cvPreds)
+} ## function
