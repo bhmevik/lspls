@@ -26,43 +26,74 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
         ##   calibrations
         ## prevRes is the residuals from the previous calibrations
 
-        ## Orthogonalise the calibration spectra wrt. prevVars
-        Mcal <- Z[[indices[1]]][-segment,]
-        Mo <- orth(Mcal, prevCalib)
+        ## The general idea is to handle the first matrix or list of
+        ## matrices (Z[[indices[1]]]), and then recall itself on the rest of
+        ## the matrices.
 
-        ## Orthogonalise the prediction spectra
-        Mpred <- Z[[indices[1]]][segment,]
-        Mpo <- Mpred - prevPred %*% Corth(Mcal, prevCalib) ## FIXME: check!
-        ## mal: Zorig[i,] - Xorig[i,] %*% Co(Xorig[-i,]) %*% Zorig[-i,]
+        ## The matrix/matrices to handle in this call:
+        ind <- indices[1]
+        M <- Z[[ind]]
+        if (is.matrix(M)) {             # A single matrix
+            ## Orthogonalise the calibration spectra wrt. prevVars
+            Mcal <- M[-segment,]
+            Mo <- orth(Mcal, prevCalib)
 
-        ## Estimate a model prevRes ~ orth. spectra + res
-        plsM <- pls.fit(Mo, prevRes, A[[indices[1]]])
-        ## Save scores:
-        S <- plsM$scores
+            ## Orthogonalise the prediction spectra
+            Mpred <- M[segment,]
+            Mpo <- Mpred - prevPred %*% Corth(Mcal, prevCalib)
+            ## mal: Zorig[i,] - Xorig[i,] %*% Co(Xorig[-i,]) %*% Zorig[-i,]
 
-        ## Predict new scores and response values
-        predScores <- sweep(Mpo, 2, plsM$Xmeans) %*% plsM$projection
-        ## FIXME: Only for orth.scores?
-        predVals <- array(dim = c(nrow(predScores), dim(plsM$Yloadings)))
-        for (a in 1:A[[indices[1]]])
-            predVals[,,a] <-
-                sweep(predScores[,1:a] %*% t(plsM$Yloadings[,1:a, drop=FALSE]),
-                      2, plsM$Ymeans, "+")
+            ## Estimate a model prevRes ~ orth. spectra + res
+            plsM <- pls.fit(Mo, prevRes, A[[ind]])
+            ## Save scores:
+            S <- plsM$scores
 
-        ## Add the predictions to the outer cvPreds variable
-        ## Alt. 1:  Calculate the 1-index indices manuall, and use
-        ## single indexing (probably quickest, but requires a loop).
-        ## Alt. 2:  Use matrix indexing with an expanded grid.
-        ##eg <- expand.grid(segment, 1:nResp, A[[indices[1]]])
-        ##indMat <- do.call("cbind", c(eg[1:2], as.list(prevComps), eg[3]))
-        ##cvPreds[indMat] <- cvPreds[indMat] + predVals
-        ## Alt. 3: Build and eval an expression which does what we want:
-        nprev <- length(prevComps)
-        nrest <- length(dim(cvPreds)) - nprev - 2
-        dummy <- Quote(cvPreds[segment,])
-        dummy[4 + seq(along = prevComps)] <- prevComps
-        dummy[4 + nprev + 1:nrest] <- dummy[rep(4, nrest)]
-        eval(substitute(dummy <<- dummy + c(predVals), list(dummy = dummy)))
+            ## Predict new scores and response values
+            predScores <- sweep(Mpo, 2, plsM$Xmeans) %*% plsM$projection
+            ## FIXME: Only for orth.scores?
+            predVals <- array(dim = c(nrow(predScores), dim(plsM$Yloadings)))
+            for (a in 1:A[[ind]])
+                predVals[,,a] <-
+                    sweep(predScores[,1:a] %*% t(plsM$Yloadings[,1:a, drop=FALSE]),
+                          2, plsM$Ymeans, "+")
+
+            ## Add the predictions to the outer cvPreds variable
+            ## Alt. 1:  Calculate the 1-index indices manuall, and use
+            ## single indexing (probably quickest, but requires a loop).
+            ## Alt. 2:  Use matrix indexing with an expanded grid.
+            ##eg <- expand.grid(segment, 1:nResp, A[[ind]])
+            ##indMat <- do.call("cbind", c(eg[1:2], as.list(prevComps), eg[3]))
+            ##cvPreds[indMat] <- cvPreds[indMat] + predVals
+            ## Alt. 3: Build and eval an expression which does what we want:
+            nprev <- length(prevComps)
+            nrest <- length(dim(cvPreds)) - nprev - 2
+            dummy <- Quote(cvPreds[segment,])
+            dummy[4 + seq(along = prevComps)] <- prevComps
+            dummy[4 + nprev + 1:nrest] <- dummy[rep(4, nrest)]
+            eval(substitute(dummy <<- dummy + c(predVals), list(dummy = dummy)))
+        } else {                        # List of parallell matrices
+            Scal <- list()              # The current calibration scores
+            Spred <- list()             # The current prediction scores
+            for (j in seq(along = M)) {
+                ## Orthogonalise the calibration spectra wrt. prevVars
+                Mcal <- M[[j]][-segment,]
+                Mo <- orth(Mcal, prevCalib)
+
+                ## Orthogonalise the prediction spectra
+                Mpred <- M[[j]][segment,]
+                Mpo <- Mpred - prevPred %*% Corth(Mcal, prevCalib)
+
+                ## Estimate a model prevRes ~ orth. spectra + res
+                plsM <- pls.fit(Mo, prevRes, A[[ind]][j])
+                ## Save scores:
+                Scal[[j]] <- plsM$scores
+
+                ## Predict new scores
+                Spred[[j]] <- sweep(Mpo, 2, plsM$Xmeans) %*% plsM$projection
+            }
+            ## Predict new response values
+            ## FIXME: How?
+        }
 
         ## Return if this is the last matrix/set of matrices
         if (length(indices) == 1) return()
@@ -75,7 +106,7 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
 
         ## Recursively call ourself for each number of components in the present
         ## model(s)
-        for (i in seq(length = A[[indices[1]]]))
+        for (i in seq(length = A[[ind]]))
             Recall(indices[-1], # Remove the index of the current matrix/ces
                    cbind(prevCalib, S[,1:i]), # Add the scores we've used
                    cbind(prevPred, predScores[,1:i, drop=FALSE]), # Add the scores we've predicted
