@@ -1,0 +1,11 @@
+Package: lspls
+Type: Package
+Title: LS-PLS ... FIXME
+Version: 0.1
+Date: 2005-12-02
+Author: Bjørn-Helge Mevik
+Maintainer: Bjørn-Helge Mevik <bhx5@mevik.net>
+Encoding: latin1
+Description: Implements the LS-PLS method described in [cit.loc] FIXME
+License: GPL version 2
+URL: http://mevik.net/work/software/lspls.html
