@@ -1,6 +1,6 @@
+### orthlsplsCv.R: Cross-validation, orthogonalizing version
 ###
-### Orthogonal case, cross-validation
-###
+### $Id$
 
 ## The algorithm is based on recursion, after X has been handled.
 
@@ -46,7 +46,7 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
             ## Estimate a model prevRes ~ orth. spectra + res
             plsM <- pls.fit(Mo, prevRes, A[[ind]])
             ## Save scores:
-            S <- plsM$scores
+            calScores <- plsM$scores
 
             ## Predict new scores and response values
             predScores <- sweep(Mpo, 2, plsM$Xmeans) %*% plsM$projection
@@ -65,12 +65,31 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
             ##indMat <- do.call("cbind", c(eg[1:2], as.list(prevComps), eg[3]))
             ##cvPreds[indMat] <- cvPreds[indMat] + predVals
             ## Alt. 3: Build and eval an expression which does what we want:
-            nprev <- length(prevComps)
-            nrest <- length(dim(cvPreds)) - nprev - 2
+            ncomps <- length(prevComps)
+            nrest <- length(dim(cvPreds)) - ncomps - 2
             dummy <- Quote(cvPreds[segment,])
             dummy[4 + seq(along = prevComps)] <- prevComps
-            dummy[4 + nprev + 1:nrest] <- dummy[rep(4, nrest)]
+            dummy[4 + ncomps + 1:nrest] <- dummy[rep(4, nrest)]
             eval(substitute(dummy <<- dummy + c(predVals), list(dummy = dummy)))
+
+            ## Return if this is the last matrix/set of matrices
+            if (length(indices) == 1) return()
+
+            ## Calculate new residuals
+            newResid <- - plsM$fitted.values + c(prevRes)
+
+            ## To save space: drop the model object(s)
+            rm(plsM)
+
+            ## Recursively call ourself for each number of components in the
+            ## present model
+            for (i in seq(length = A[[ind]]))
+                Recall(indices[-1], # Remove the index of the current matrix
+                       cbind(prevCalib, calScores[,1:i]), # Add the scores we've used
+                       cbind(prevPred, predScores[,1:i, drop=FALSE]), # Add the scores we've predicted
+                       c(prevComps, i), # and the number of comps
+                       newResid[,,i]) # update the residual
+
         } else {                        # List of parallell matrices
             Scal <- list()              # The current calibration scores
             Spred <- list()             # The current prediction scores
@@ -91,27 +110,42 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
                 ## Predict new scores
                 Spred[[j]] <- sweep(Mpo, 2, plsM$Xmeans) %*% plsM$projection
             }
-            ## Predict new response values
-            ## FIXME: How?
-        }
+            ## To save space: drop the model object
+            rm(plsM)
 
-        ## Return if this is the last matrix/set of matrices
-        if (length(indices) == 1) return()
+            ## Loop over the different combinations of #comps:
+            nComps <- expand.grid(lapply(as.list(A[[ind]]), seq))
+            for (cind in 1:nrow(nComps)) {
+                newComps <- nComps[cind,]
+                comps <- c(prevComps, unlist(newComps))
+                ## Predict new response values
+                calScores <- mapply(function(B, b) B[,1:b], Scal, newComps)
+                predScores <- mapply(function(B, b) B[,1:b], Spred, newComps)
+                lsS <- lm.fit(calScores, prevRes) # FIXME: How about intercept?
+                newResid <- lsS$residuals
+                predVals <- predScores %*% lsS$coefficients
 
-        ## Calculate new residuals
-        newResid <- - plsM$fitted.values + c(prevRes)
+                ## Add the predictions to the outer cvPreds variable.  Build
+                ## and eval an expression which does what we want:
+                nc <- length(comps)
+                nrest <- length(dim(cvPreds)) - nc - 2
+                dummy <- Quote(cvPreds[segment,])
+                dummy[4 + seq(along = comps)] <- comps
+                dummy[4 + nc + 1:nrest] <- dummy[rep(4, nrest)]
+                eval(substitute(dummy <<- dummy + c(predVals),
+                                list(dummy = dummy)))
 
-        ## To save space: drop the model object(s)
-        rm(plsM)
+                if (length(indices) > 1) { # There are more matrices to fit
+                    ## Recursively call ourself
+                    Recall(indices[-1], # Remove the index of the current matrices
+                           cbind(prevCalib, calScores), # Add the scores we've used
+                           cbind(prevPred, predScores), # Add the scores we've predicted
+                           c(comps), # and the number of comps
+                           newResid) # use the new residual
 
-        ## Recursively call ourself for each number of components in the present
-        ## model(s)
-        for (i in seq(length = A[[ind]]))
-            Recall(indices[-1], # Remove the index of the current matrix/ces
-                   cbind(prevCalib, S[,1:i]), # Add the scores we've used
-                   cbind(prevPred, predScores[,1:i, drop=FALSE]), # Add the scores we've predicted
-                   c(prevComps, i), # and the number of comps
-                   newResid[,,i]) # update the residual
+                }
+            } ## for
+        } ## if
     } ## recursive function
 
     ## Setup:
