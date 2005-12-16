@@ -119,8 +119,12 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
                 newComps <- nComps[cind,]
                 comps <- c(prevComps, unlist(newComps))
                 ## Predict new response values
-                calScores <- mapply(function(B, b) B[,1:b], Scal, newComps)
-                predScores <- mapply(function(B, b) B[,1:b], Spred, newComps)
+                calScores <-
+                    do.call("cbind", mapply(function(B, b) B[,1:b, drop=FALSE],
+                                            Scal, newComps, SIMPLIFY = FALSE))
+                predScores <-
+                    do.call("cbind", mapply(function(B, b) B[,1:b, drop=FALSE],
+                                            Spred, newComps, SIMPLIFY = FALSE))
                 lsS <- lm.fit(calScores, prevRes) # FIXME: How about intercept?
                 newResid <- lsS$residuals
                 predVals <- predScores %*% lsS$coefficients
@@ -131,7 +135,7 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
                 nrest <- length(dim(cvPreds)) - nc - 2
                 dummy <- Quote(cvPreds[segment,])
                 dummy[4 + seq(along = comps)] <- comps
-                dummy[4 + nc + 1:nrest] <- dummy[rep(4, nrest)]
+                if (nrest > 0) dummy[4 + nc + 1:nrest] <- dummy[rep(4, nrest)]
                 eval(substitute(dummy <<- dummy + c(predVals),
                                 list(dummy = dummy)))
 
@@ -193,7 +197,7 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
         eval(addPredictions)
 
         ## Handle the rest of the matrices:
-        cvPredRest(indices = 1:length(unlist(A)),
+        cvPredRest(indices = 1:length(A),
                    prevCalib = X[-segment,, drop = FALSE],
                    prevPred = X[segment,, drop = FALSE],
                    prevComps = c(),
