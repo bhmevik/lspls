@@ -26,8 +26,8 @@ lspls <- function(formula, ncomp, data, subset, na.action,
     }
     ## All the predictor matrices, in correct order:
     matrices <- apply(attr(mt, "factors"), 2, function(x) mf[,which(x > 0)])
-    X <- predmats[[1]]
-    Z <- predmats[-1]
+    X <- matrices[[1]]
+    Z <- matrices[-1]
     ## Make sure ncomp is a list, and repeat it as needed:
     ncomp <- rep(as.list(ncomp), length = length(Z))
 

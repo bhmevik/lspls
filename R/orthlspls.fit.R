@@ -33,11 +33,11 @@ orthlspls.fit <- function(Y, X, Z, A, method = getOption("pls.algorithm")) {
     res <- lsX$residuals
 
     ## For testing:
-    Balt <- B
+    ##Balt <- B
 
     ## Walk through Z:
     for (i in seq(along = Z)) {
-        cat("i =", i, "\n")
+        ##cat("i =", i, "\n")
         M <- Z[[i]]
         if (is.matrix(M)) {             # Single matrix
             Mo <- orth(M, V[,1:nVar])   # Orth. M against all used variables
@@ -48,7 +48,7 @@ orthlspls.fit <- function(Y, X, Z, A, method = getOption("pls.algorithm")) {
             ## Testing:
             lmZ <- lm.fit(models[[i]]$scores, res)
 #print(dim(lmZ$coefficients))
-            Balt[nVar + (1:A[[i]]),] <- lmZ$coefficients
+            ##Balt[nVar + (1:A[[i]]),] <- lmZ$coefficients
 #print(dim(plsM$Yloadings))
             ## FIXME: Does this depend on the pls algorithm?
             B[nVar + (1:A[[i]]),] <- t(models[[i]]$Yloadings)
@@ -62,7 +62,7 @@ orthlspls.fit <- function(Y, X, Z, A, method = getOption("pls.algorithm")) {
             orthCoefs[[i]] <- list()
             models[[i]] <- list()
             for (j in seq(along = M)) {
-                cat("j =", j, "\n")
+                ##cat("j =", j, "\n")
                 ## Walk through Z[[i]]
                 Mo <- orth(M[[j]], V[,1:nVar])
                 orthCoefs[[i]][[j]] <- Corth(M[[j]], V[,1:nVar]) # For pred
@@ -75,14 +75,13 @@ orthlspls.fit <- function(Y, X, Z, A, method = getOption("pls.algorithm")) {
             ## Not strictly neccessary in orth. version:
             lmZ <- lm.fit(Vadd, res)
             B[nVar + (1:sum(A[[i]])),] <- lmZ$coefficients
-            Balt[nVar + (1:sum(A[[i]])),] <- lmZ$coefficients
+            ##Balt[nVar + (1:sum(A[[i]])),] <- lmZ$coefficients
             res <- lmZ$residuals
             nVar <- nVar + sum(A[[i]])
         } # if
     } # for
     list(coefficients = B, predictors = V, orthCoefs = orthCoefs,
-         models = models, ncomp = A, scores = S, loadings = L, residuals = res,
-         Balt = Balt)
+         models = models, ncomp = A, scores = S, loadings = L, residuals = res)
 } # function
 
 ## Forenklingstanke: Gjør om alle enkeltmatrisene i Z til lister med
