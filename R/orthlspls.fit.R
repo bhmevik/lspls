@@ -88,3 +88,9 @@ orthlspls.fit <- function(Y, X, Z, A, method = getOption("pls.algorithm")) {
 ## ett element.  Da blir algoritmene enklere (og burde ikke bli
 ## nevneverdig saktere).  Ved behov kan man teste på length(M)
 ## (f.eks. ved beregning av B og ny res).
+
+## FIXME:
+## - Change name of 'models' component to 'plsmodels'?
+## - Remove ncomp?
+## - Are scores and loadings needed?
+## - Add fitted values?

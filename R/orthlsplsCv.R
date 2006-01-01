@@ -4,10 +4,8 @@
 
 ## The algorithm is based on recursion, after X has been handled.
 
-orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
-                        segments = 10, segment.type = c("random",
-                                       "consecutive", "interleaved"),
-                        length.seg) {
+orthlsplsCv <- function(Y, X, Z, A, segments,
+                        method = getOption("pls.algorithm"), ...) {
 
     ## The recursive function:
     ## It uses the following variables from orthlsplsCv
@@ -66,10 +64,11 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
             ##cvPreds[indMat] <- cvPreds[indMat] + predVals
             ## Alt. 3: Build and eval an expression which does what we want:
             ncomps <- length(prevComps)
-            nrest <- length(dim(cvPreds)) - ncomps - 2
+            nrest <- length(dim(cvPreds)) - ncomps - 3
             dummy <- Quote(cvPreds[segment,])
-            dummy[4 + seq(along = prevComps)] <- prevComps
-            dummy[4 + ncomps + 1:nrest] <- dummy[rep(4, nrest)]
+            dummy[4 + seq(along = prevComps)] <- prevComps + 1
+            dummy[5 + ncomps] <- -1
+            if (nrest > 0) dummy[5 + ncomps + 1:nrest] <- dummy[rep(4, nrest)]
             eval(substitute(dummy <<- dummy + c(predVals), list(dummy = dummy)))
 
             ## Return if this is the last matrix/set of matrices
@@ -83,12 +82,12 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
 
             ## Recursively call ourself for each number of components in the
             ## present model
-            for (i in seq(length = A[[ind]]))
+            for (i in 0:A[[ind]])
                 Recall(indices[-1], # Remove the index of the current matrix
-                       cbind(prevCalib, calScores[,1:i]), # Add the scores we've used
-                       cbind(prevPred, predScores[,1:i, drop=FALSE]), # Add the scores we've predicted
+                       cbind(prevCalib, calScores[,seq(length = i)]), # Add the scores we've used
+                       cbind(prevPred, predScores[,seq(length = i), drop=FALSE]), # Add the scores we've predicted
                        c(prevComps, i), # and the number of comps
-                       newResid[,,i]) # update the residual
+                       if (i > 0) newResid[,,i] else prevRes) # update the residual
 
         } else {                        # List of parallell matrices
             Scal <- list()              # The current calibration scores
@@ -114,30 +113,34 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
             rm(plsM)
 
             ## Loop over the different combinations of #comps:
-            nComps <- expand.grid(lapply(as.list(A[[ind]]), seq))
+            nComps <- expand.grid(lapply(A[[ind]], seq, from = 0))
             for (cind in 1:nrow(nComps)) {
                 newComps <- nComps[cind,]
                 comps <- c(prevComps, unlist(newComps))
                 ## Predict new response values
                 calScores <-
-                    do.call("cbind", mapply(function(B, b) B[,1:b, drop=FALSE],
+                    do.call("cbind", mapply(function(B, b) B[,seq(length=b), drop=FALSE],
                                             Scal, newComps, SIMPLIFY = FALSE))
                 predScores <-
-                    do.call("cbind", mapply(function(B, b) B[,1:b, drop=FALSE],
+                    do.call("cbind", mapply(function(B, b) B[,seq(length=b), drop=FALSE],
                                             Spred, newComps, SIMPLIFY = FALSE))
-                lsS <- lm.fit(calScores, prevRes) # FIXME: How about intercept?
-                newResid <- lsS$residuals
-                predVals <- predScores %*% lsS$coefficients
-
-                ## Add the predictions to the outer cvPreds variable.  Build
-                ## and eval an expression which does what we want:
-                nc <- length(comps)
-                nrest <- length(dim(cvPreds)) - nc - 2
-                dummy <- Quote(cvPreds[segment,])
-                dummy[4 + seq(along = comps)] <- comps
-                if (nrest > 0) dummy[4 + nc + 1:nrest] <- dummy[rep(4, nrest)]
-                eval(substitute(dummy <<- dummy + c(predVals),
-                                list(dummy = dummy)))
+                if (all(newComps == 0)) {
+                    newResid <- prevRes
+                } else {
+                    lsS <- lm.fit(calScores, prevRes) # FIXME: How about intercept?
+                    newResid <- lsS$residuals
+                    predVals <- predScores %*% lsS$coefficients
+                    rm(lsS)
+                    ## Add the predictions to the outer cvPreds variable.  Build
+                    ## and eval an expression which does what we want:
+                    nc <- length(comps)
+                    nrest <- length(dim(cvPreds)) - nc - 2
+                    dummy <- Quote(cvPreds[segment,])
+                    dummy[4 + seq(along = comps)] <- comps + 1
+                    if (nrest > 0) dummy[4 + nc + 1:nrest] <- dummy[rep(4, nrest)]
+                    eval(substitute(dummy <<- dummy + c(predVals),
+                                    list(dummy = dummy)))
+                }
 
                 if (length(indices) > 1) { # There are more matrices to fit
                     ## Recursively call ourself
@@ -156,7 +159,7 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
     nObs <- nrow(X)
     nResp <- ncol(Y)
     ## cvPreds: the cross-validated predictions:
-    cvPreds <- array(0, dim = c(nObs, nResp, unlist(A)))
+    cvPreds <- array(0, dim = c(nObs, nResp, unlist(A) + 1))
     ## Build an unevaluated expression that will insert the predictions into
     ## cvPreds[segment,,...,] when evaluated:
     ndim <- length(dim(cvPreds))
@@ -170,19 +173,6 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
     method <- match.arg(method, c("oscorespls", "kernelpls", "simpls"))
     pls.fit <- switch(method, oscorespls = oscorespls.fit,
                       kernelpls = kernelpls.fit, simpls = simpls.fit)
-
-    ## Set up segments:
-    if (is.list(segments)) {
-        if (is.null(attr(segments, "type")))
-            attr(segments, "type") <- "user supplied"
-    } else {
-        if (missing(length.seg)) {
-            segments <- cvsegments(nObs, k = segments, type = segment.type)
-        } else {
-            segments <- cvsegments(nObs, length.seg = length.seg,
-                                   type = segment.type)
-        }
-    }
 
     ## The main cross-validation loop
     temp <- 0
@@ -203,5 +193,7 @@ orthlsplsCv <- function(Y, X, Z, A, method = getOption("pls.algorithm"),
                    prevComps = c(),
                    prevRes = resid)
     }
+    dimnames(cvPreds) <- c(list(1:nObs, 1:nResp),
+                           lapply(unlist(A), function(x) 0:x))
     return(cvPreds)
 } ## function
