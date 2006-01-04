@@ -6,13 +6,13 @@
   Fits orthogonalized LS-PLS models.
 }
 \usage{
-orthlspls.fit(Y, X, Z, A, method = getOption("pls.algorithm"))
+orthlspls.fit(Y, X, Z, ncomp, method = getOption("pls.algorithm"))
 }
 \arguments{
   \item{Y}{matrix.  Response matrix.}
   \item{X}{matrix.  The first predictor matrix (typically a design matrix).}
   \item{Z}{list.  List of predictor matrices.}
-  \item{A}{list.  The number of components to fit from each matrix.}
+  \item{ncomp}{list.  The number of components to fit from each matrix.}
   \item{method}{PLS algorithm to use when fitting the PLS models.}
 }
 \details{

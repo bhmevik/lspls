@@ -2,10 +2,10 @@
 ### Orthogonal case, fitting of model
 ###
 
-orthlspls.fit <- function(Y, X, Z, A, method = getOption("pls.algorithm")) {
+orthlspls.fit <- function(Y, X, Z, ncomp, method = getOption("pls.algorithm")) {
     ## Parametres:
     nObs <- nrow(X)
-    totNumComps <- sum(unlist(A))
+    totNumComps <- sum(unlist(ncomp))
     totNumCoefs <- ncol(X) + totNumComps
     if(totNumCoefs > nObs) stop("Too many variables/components selected.")
 
@@ -42,20 +42,20 @@ orthlspls.fit <- function(Y, X, Z, A, method = getOption("pls.algorithm")) {
         if (is.matrix(M)) {             # Single matrix
             Mo <- orth(M, V[,1:nVar])   # Orth. M against all used variables
             orthCoefs[[i]] <- Corth(M, V[,1:nVar]) # For pred
-            models[[i]] <- pls.fit(Mo, res, A[[i]])# Could use Y
-            V[,nVar + (1:A[[i]])] <- S[[i]] <- models[[i]]$scores
+            models[[i]] <- pls.fit(Mo, res, ncomp[[i]])# Could use Y
+            V[,nVar + (1:ncomp[[i]])] <- S[[i]] <- models[[i]]$scores
             L[[i]] <- models[[i]]$loadings
             ## Testing:
             lmZ <- lm.fit(models[[i]]$scores, res)
 #print(dim(lmZ$coefficients))
-            ##Balt[nVar + (1:A[[i]]),] <- lmZ$coefficients
+            ##Balt[nVar + (1:ncomp[[i]]),] <- lmZ$coefficients
 #print(dim(plsM$Yloadings))
             ## FIXME: Does this depend on the pls algorithm?
-            B[nVar + (1:A[[i]]),] <- t(models[[i]]$Yloadings)
-            res <- models[[i]]$residuals[,,A[[i]]]
-            nVar <- nVar + A[[i]]
+            B[nVar + (1:ncomp[[i]]),] <- t(models[[i]]$Yloadings)
+            res <- models[[i]]$residuals[,,ncomp[[i]]]
+            nVar <- nVar + ncomp[[i]]
         } else {                        # Parallell matrices
-            Vadd <- matrix(nrow = nObs, ncol = sum(A[[i]])) # The variables to be added in the present step
+            Vadd <- matrix(nrow = nObs, ncol = sum(ncomp[[i]])) # The variables to be added in the present step
             added <- 0
             S[[i]] <- list()
             L[[i]] <- list()
@@ -66,22 +66,22 @@ orthlspls.fit <- function(Y, X, Z, A, method = getOption("pls.algorithm")) {
                 ## Walk through Z[[i]]
                 Mo <- orth(M[[j]], V[,1:nVar])
                 orthCoefs[[i]][[j]] <- Corth(M[[j]], V[,1:nVar]) # For pred
-                models[[i]][[j]] <- pls.fit(Mo, res, A[[i]][[j]])# Could use Y
-                Vadd[,added + (1:A[[i]][[j]])] <- S[[i]][[j]] <- models[[i]][[j]]$scores
+                models[[i]][[j]] <- pls.fit(Mo, res, ncomp[[i]][[j]])# Could use Y
+                Vadd[,added + (1:ncomp[[i]][[j]])] <- S[[i]][[j]] <- models[[i]][[j]]$scores
                 L[[i]][[j]] <- models[[i]][[j]]$loadings
-                added <- added + A[[i]][[j]]
+                added <- added + ncomp[[i]][[j]]
             }
-            V[,nVar + (1:sum(A[[i]]))] <- Vadd
+            V[,nVar + (1:sum(ncomp[[i]]))] <- Vadd
             ## Not strictly neccessary in orth. version:
             lmZ <- lm.fit(Vadd, res)
-            B[nVar + (1:sum(A[[i]])),] <- lmZ$coefficients
-            ##Balt[nVar + (1:sum(A[[i]])),] <- lmZ$coefficients
+            B[nVar + (1:sum(ncomp[[i]])),] <- lmZ$coefficients
+            ##Balt[nVar + (1:sum(ncomp[[i]])),] <- lmZ$coefficients
             res <- lmZ$residuals
-            nVar <- nVar + sum(A[[i]])
+            nVar <- nVar + sum(ncomp[[i]])
         } # if
     } # for
     list(coefficients = B, predictors = V, orthCoefs = orthCoefs,
-         models = models, ncomp = A, scores = S, loadings = L, residuals = res)
+         models = models, ncomp = ncomp, scores = S, loadings = L, residuals = res)
 } # function
 
 ## Forenklingstanke: Gjør om alle enkeltmatrisene i Z til lister med

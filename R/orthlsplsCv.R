@@ -4,15 +4,15 @@
 
 ## The algorithm is based on recursion, after X has been handled.
 
-orthlsplsCv <- function(Y, X, Z, A, segments,
+orthlsplsCv <- function(Y, X, Z, ncomp, segments,
                         method = getOption("pls.algorithm"), ...) {
 
     ## The recursive function:
     ## It uses the following variables from orthlsplsCv
     ## - Z: list of spectral matrices
-    ## - A: list of #comps to use in the CV
+    ## - ncomp: list of #comps to use in the CV
     ## - segment: indices of the segment to be predicted
-    ## - cvPreds: array of predictions; dim: c(nObs, nResp, unlist(A))
+    ## - cvPreds: array of predictions; dim: c(nObs, nResp, unlist(ncomp))
     ## - pls.fit: the pls fit function
     cvPredRest <- function(indices, prevCalib, prevPred, prevComps, prevRes) {
         ## indices is the indices of the remaining matrices
@@ -42,7 +42,7 @@ orthlsplsCv <- function(Y, X, Z, A, segments,
             ## mal: Zorig[i,] - Xorig[i,] %*% Co(Xorig[-i,]) %*% Zorig[-i,]
 
             ## Estimate a model prevRes ~ orth. spectra + res
-            plsM <- pls.fit(Mo, prevRes, A[[ind]])
+            plsM <- pls.fit(Mo, prevRes, ncomp[[ind]])
             ## Save scores:
             calScores <- plsM$scores
 
@@ -50,7 +50,7 @@ orthlsplsCv <- function(Y, X, Z, A, segments,
             predScores <- sweep(Mpo, 2, plsM$Xmeans) %*% plsM$projection
             ## FIXME: Only for orth.scores?
             predVals <- array(dim = c(nrow(predScores), dim(plsM$Yloadings)))
-            for (a in 1:A[[ind]])
+            for (a in 1:ncomp[[ind]])
                 predVals[,,a] <-
                     sweep(predScores[,1:a] %*% t(plsM$Yloadings[,1:a, drop=FALSE]),
                           2, plsM$Ymeans, "+")
@@ -59,7 +59,7 @@ orthlsplsCv <- function(Y, X, Z, A, segments,
             ## Alt. 1:  Calculate the 1-index indices manuall, and use
             ## single indexing (probably quickest, but requires a loop).
             ## Alt. 2:  Use matrix indexing with an expanded grid.
-            ##eg <- expand.grid(segment, 1:nResp, A[[ind]])
+            ##eg <- expand.grid(segment, 1:nResp, ncomp[[ind]])
             ##indMat <- do.call("cbind", c(eg[1:2], as.list(prevComps), eg[3]))
             ##cvPreds[indMat] <- cvPreds[indMat] + predVals
             ## Alt. 3: Build and eval an expression which does what we want:
@@ -82,7 +82,7 @@ orthlsplsCv <- function(Y, X, Z, A, segments,
 
             ## Recursively call ourself for each number of components in the
             ## present model
-            for (i in 0:A[[ind]])
+            for (i in 0:ncomp[[ind]])
                 Recall(indices[-1], # Remove the index of the current matrix
                        cbind(prevCalib, calScores[,seq(length = i)]), # Add the scores we've used
                        cbind(prevPred, predScores[,seq(length = i), drop=FALSE]), # Add the scores we've predicted
@@ -102,7 +102,7 @@ orthlsplsCv <- function(Y, X, Z, A, segments,
                 Mpo <- Mpred - prevPred %*% Corth(Mcal, prevCalib)
 
                 ## Estimate a model prevRes ~ orth. spectra + res
-                plsM <- pls.fit(Mo, prevRes, A[[ind]][j])
+                plsM <- pls.fit(Mo, prevRes, ncomp[[ind]][j])
                 ## Save scores:
                 Scal[[j]] <- plsM$scores
 
@@ -113,7 +113,7 @@ orthlsplsCv <- function(Y, X, Z, A, segments,
             rm(plsM)
 
             ## Loop over the different combinations of #comps:
-            nComps <- expand.grid(lapply(A[[ind]], seq, from = 0))
+            nComps <- expand.grid(lapply(ncomp[[ind]], seq, from = 0))
             for (cind in 1:nrow(nComps)) {
                 newComps <- nComps[cind,]
                 comps <- c(prevComps, unlist(newComps))
@@ -159,7 +159,7 @@ orthlsplsCv <- function(Y, X, Z, A, segments,
     nObs <- nrow(X)
     nResp <- ncol(Y)
     ## cvPreds: the cross-validated predictions:
-    cvPreds <- array(0, dim = c(nObs, nResp, unlist(A) + 1))
+    cvPreds <- array(0, dim = c(nObs, nResp, unlist(ncomp) + 1))
     ## Build an unevaluated expression that will insert the predictions into
     ## cvPreds[segment,,...,] when evaluated:
     ndim <- length(dim(cvPreds))
@@ -187,13 +187,13 @@ orthlsplsCv <- function(Y, X, Z, A, segments,
         eval(addPredictions)
 
         ## Handle the rest of the matrices:
-        cvPredRest(indices = 1:length(A),
+        cvPredRest(indices = 1:length(ncomp),
                    prevCalib = X[-segment,, drop = FALSE],
                    prevPred = X[segment,, drop = FALSE],
                    prevComps = c(),
                    prevRes = resid)
     }
     dimnames(cvPreds) <- c(list(1:nObs, 1:nResp),
-                           lapply(unlist(A), function(x) 0:x))
+                           lapply(unlist(ncomp), function(x) 0:x))
     return(cvPreds)
 } ## function

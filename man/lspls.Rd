@@ -41,7 +41,11 @@ lspls(formula, ncomp, data, subset, na.action,
   right).  Each term can either be a single matrix, which will be added
   by itself, or several matrices separated with \code{:}, e.g.,
   \code{Z:V:W}, which will be added simultaneously (this will be denoted
-  \term{parallell} matrices).
+  \term{parallell} matrices).  Note that an intercept is \emph{not}
+  automatically.  It should be included as a constant coloumn in
+  \var{term1}, if desired.  (If no intercept is included, the rest of
+  the matrices should be centered.  This happens automatically if
+  \var{term1} includes the intercept.)
 
   The number of components to use in each of the PLSR models, is
   specified with the \code{ncomp} argument.  \code{ncomp} should be a

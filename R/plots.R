@@ -18,6 +18,16 @@ plot.lspls <- function(x, plottype = c("scores", "loadings"), ...) {
 ### Scoreplot
 ###
 
+## Idea: Make `scoreplot' in pls generic, with methods for matrix,
+## loadings(?), lspls and default (anything that has a 'scores' method that
+## gives a single matrix).
+## FIXME: Must go into .First.lib:
+## Dirty hack:
+if (!exists("scoreplot.default")) {
+    scoreplot.default <- scoreplot
+    scoreplot <- function(object, ...) UseMethod("scoreplot")
+}
+
 scoreplot.lspls <- function(object, ...) {
     opar <- par(no.readonly = TRUE)
     on.exit(par(opar))
@@ -41,6 +51,12 @@ scoreplot.lspls <- function(object, ...) {
 ## Idea: Make `loadingplot' in pls generic, with methods for matrix,
 ## loadings(?), lspls and default (anything that has a 'loadings' method that
 ## gives a single matrix).
+## FIXME: Must go into .First.lib:
+## Dirty hack:
+if (!exists("loadingplot.default")) {
+    loadingplot.default <- loadingplot
+    loadingplot <- function(object, ...) UseMethod("loadingplot")
+}
 
 loadingplot.lspls <- function(object, ...) {
     opar <- par(no.readonly = TRUE)
