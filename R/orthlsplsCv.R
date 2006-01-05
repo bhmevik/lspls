@@ -4,8 +4,7 @@
 
 ## The algorithm is based on recursion, after X has been handled.
 
-orthlsplsCv <- function(Y, X, Z, ncomp, segments,
-                        method = getOption("pls.algorithm"), ...) {
+orthlsplsCv <- function(Y, X, Z, ncomp, segments, ...) {
 
     ## The recursive function:
     ## It uses the following variables from orthlsplsCv
@@ -169,10 +168,8 @@ orthlsplsCv <- function(Y, X, Z, ncomp, segments,
     ## Substitute this in an assignment statement:
     addPredictions <- substitute(dummy <- predVals, list(dummy = dummy))
 
-    ## FIXME: Maybe in outer function:
-    method <- match.arg(method, c("oscorespls", "kernelpls", "simpls"))
-    pls.fit <- switch(method, oscorespls = oscorespls.fit,
-                      kernelpls = kernelpls.fit, simpls = simpls.fit)
+    ## Choose PLS fit algorithm.  FIXME: Support other algs?
+    pls.fit <- oscorespls.fit
 
     ## The main cross-validation loop
     temp <- 0

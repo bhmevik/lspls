@@ -6,8 +6,7 @@
   Calculate cross-validated predictions for LS-PLS models.
 }
 \usage{
-lsplsCv(formula, ncomp, data, subset, na.action,
-        method = c("oscorespls", "kernelpls", "simpls"), segments = 10,
+lsplsCv(formula, ncomp, data, subset, na.action, segments = 10,
         segment.type = c("random", "consecutive", "interleaved"),
         length.seg, model = TRUE, \dots)
 }
@@ -20,7 +19,6 @@ lsplsCv(formula, ncomp, data, subset, na.action,
     used in the fitting process.}
   \item{na.action}{a function which indicates what should happen when
     the data contain missing values.}
-  \item{method}{character string.  The PLS algorithm to be used.}
   \item{segments}{the number of segments to use, or a list with segments (see
           Details).}
   \item{segment.type}{the type of segments to use.  Ignored if
@@ -63,7 +61,6 @@ lsplsCv(formula, ncomp, data, subset, na.action,
   \item{na.action}{if observations with missing values were removed,
     \code{na.action} contains a vector with their indices.}
   \item{ncomp}{the list of number of components used in the model.}
-  \item{method}{the PLS algorithm used to fit the PLSRs.}
   \item{call}{the function call.}
   \item{terms}{the model terms.}
   \item{model}{if \code{model = TRUE}, the model frame.}

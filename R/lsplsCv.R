@@ -2,7 +2,6 @@
 ### $Id$
 
 lsplsCv <- function(formula, ncomp, data, subset, na.action,
-                    method = c("oscorespls", "kernelpls", "simpls"),
                     segments = 10, segment.type = c("random",
                                    "consecutive", "interleaved"),
                     length.seg, model = TRUE, ...)
@@ -51,13 +50,12 @@ lsplsCv <- function(formula, ncomp, data, subset, na.action,
     z <- list()
     class(z) <- "lsplsCv"
     ## Do the cross-validation:
-    z$pred <- orthlsplsCv(Y, X, Z, ncomp, segments, method, ...)
+    z$pred <- orthlsplsCv(Y, X, Z, ncomp, segments, ...)
     names(dimnames(z$pred)) <-
         c("obs", "resp", rownames(attr(delete.response(mt), "factors"))[-1])
     z$segments <- segments
     z$na.action <- attr(mf, "na.action")
     z$ncomp <- ncomp
-    z$method <- method
     z$call <- match.call()
     z$terms <- mt
     if (model) z$model <- mf

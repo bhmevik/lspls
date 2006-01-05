@@ -6,8 +6,7 @@
   A function to fit LS-PLS (least squares-partial least squares) models.
 }
 \usage{
-lspls(formula, ncomp, data, subset, na.action,
-      method = c("oscorespls", "kernelpls", "simpls"), model = TRUE, \dots)
+lspls(formula, ncomp, data, subset, na.action, model = TRUE, \dots)
 }
 \arguments{
   \item{formula}{model formula.  See Details.}
@@ -18,7 +17,6 @@ lspls(formula, ncomp, data, subset, na.action,
     used in the fitting process.}
   \item{na.action}{a function which indicates what should happen when
     the data contain missing values.}
-  \item{method}{character string.  The PLS algorithm to be used.}
   \item{model}{logical.  If \code{TRUE}, the model frame is returned.}
   \item{\dots}{additional arguments, passed to the underlying PLSR fit
     function.}
@@ -77,7 +75,6 @@ lspls(formula, ncomp, data, subset, na.action,
   \item{na.action}{if observations with missing values were removed,
     \code{na.action} contains a vector with their indices.}
   \item{ncomp}{the list of number of components used in the model.}
-  \item{method}{the PLS algorithm used to fit the PLSRs.}
   \item{call}{the function call.}
   \item{terms}{the model terms.}
   \item{model}{if \code{model = TRUE}, the model frame.}

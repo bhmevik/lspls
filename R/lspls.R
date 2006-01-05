@@ -2,7 +2,6 @@
 ### $Id$
 
 lspls <- function(formula, ncomp, data, subset, na.action,
-                  method = c("oscorespls", "kernelpls", "simpls"),
                   model = TRUE, ...)
 {
     ## Get the terms
@@ -32,12 +31,11 @@ lspls <- function(formula, ncomp, data, subset, na.action,
     ncomp <- rep(as.list(ncomp), length = length(Z))
 
     ## Fit the model:
-    z <- orthlspls.fit(Y, X, Z, ncomp, method, ...)
+    z <- orthlspls.fit(Y, X, Z, ncomp, ...)
     ## Build and return the object:
     class(z) <- "lspls"
     z$na.action <- attr(mf, "na.action")
     z$ncomp <- ncomp
-    z$method <- method
     z$call <- match.call()
     z$terms <- mt
     if (model) z$model <- mf

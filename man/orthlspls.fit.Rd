@@ -6,14 +6,13 @@
   Fits orthogonalized LS-PLS models.
 }
 \usage{
-orthlspls.fit(Y, X, Z, ncomp, method = getOption("pls.algorithm"))
+orthlspls.fit(Y, X, Z, ncomp)
 }
 \arguments{
   \item{Y}{matrix.  Response matrix.}
   \item{X}{matrix.  The first predictor matrix (typically a design matrix).}
   \item{Z}{list.  List of predictor matrices.}
   \item{ncomp}{list.  The number of components to fit from each matrix.}
-  \item{method}{PLS algorithm to use when fitting the PLS models.}
 }
 \details{
   \code{orthlspls.fit} is not meant to be called by the user.  It is

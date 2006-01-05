@@ -6,8 +6,7 @@
   Low-level function to perform the cross-validation in \code{lsplsCv}.
 }
 \usage{
-orthlsplsCv(Y, X, Z, ncomp, segments, method = getOption("pls.algorithm"),
-            \dots)
+orthlsplsCv(Y, X, Z, ncomp, segments, \dots)
 }
 \arguments{
   \item{Y}{matrix.  Response matrix.}
@@ -15,7 +14,6 @@ orthlsplsCv(Y, X, Z, ncomp, segments, method = getOption("pls.algorithm"),
   \item{Z}{list.  List of predictor matrices.}
   \item{ncomp}{list.  The number of components to fit from each matrix.}
   \item{segments}{list.  The segments to use.}
-  \item{method}{PLS algorithm to use when fitting the PLS models.}
   \item{\dots}{Further arguments.  Currently not used.}
 }
 \details{

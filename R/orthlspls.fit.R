@@ -2,7 +2,7 @@
 ### Orthogonal case, fitting of model
 ###
 
-orthlspls.fit <- function(Y, X, Z, ncomp, method = getOption("pls.algorithm")) {
+orthlspls.fit <- function(Y, X, Z, ncomp) {
     ## Parametres:
     nObs <- nrow(X)
     totNumComps <- sum(unlist(ncomp))
@@ -19,10 +19,8 @@ orthlspls.fit <- function(Y, X, Z, ncomp, method = getOption("pls.algorithm")) {
     L <- list()                         # Loadings
 
 
-    ## FIXME: Maybe in outer function:
-    method <- match.arg(method, c("oscorespls", "kernelpls", "simpls"))
-    pls.fit <- switch(method, oscorespls = oscorespls.fit,
-                      kernelpls = kernelpls.fit, simpls = simpls.fit)
+    ## Choose PLS fit algorithm.  FIXME: Support other algs?
+    pls.fit <- oscorespls.fit
 
     ## Start with X:
     lsX <- lm.fit(X, Y)
