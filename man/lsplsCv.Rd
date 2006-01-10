@@ -65,7 +65,21 @@ lsplsCv(formula, ncomp, data, subset, na.action, segments = 10,
   \item{terms}{the model terms.}
   \item{model}{if \code{model = TRUE}, the model frame.}
 }
-\references{ FIXME: referanser }
+\references{
+  Jørgensen, K., Segtnan, V. H., Thyholt, K., Næs, T. (2004)  A
+  Comparison of Methods for Analysing Regression Models with Both
+  Spectral and Designed Variables.
+  \emph{Journal of Chemometrics}, \bold{18}(10), 451--464.
+
+  Jørgensen, K., Mevik, B.-H., Næs, T.  Combining Designed Experiments
+  with Several Blocks of Spectroscopic Data.
+  (Submitted)
+
+  Mevik, B.-H., Jørgensen, K., Måge, I., Næs, T.  LS-PLS: Combining
+  Categorical Design Variables with Blocks of Spectroscopic
+  Measurements.
+  (Submitted)
+}
 \author{Bjørn-Helge Mevik}
 \note{
   Currently, \code{lsplsCv} handles the formula and the data, and calls

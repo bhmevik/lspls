@@ -43,12 +43,10 @@ orthlspls.fit <- function(Y, X, Z, ncomp) {
             models[[i]] <- pls.fit(Mo, res, ncomp[[i]])# Could use Y
             V[,nVar + (1:ncomp[[i]])] <- S[[i]] <- models[[i]]$scores
             L[[i]] <- models[[i]]$loadings
-            ## Testing:
-            lmZ <- lm.fit(models[[i]]$scores, res)
-#print(dim(lmZ$coefficients))
+            ## FIXME: Testing:
+            ##lmZ <- lm.fit(models[[i]]$scores, res)
             ##Balt[nVar + (1:ncomp[[i]]),] <- lmZ$coefficients
-#print(dim(plsM$Yloadings))
-            ## FIXME: Does this depend on the pls algorithm?
+            ## FIXME: This depends on the pls algorithm (at least the scaling):
             B[nVar + (1:ncomp[[i]]),] <- t(models[[i]]$Yloadings)
             res <- models[[i]]$residuals[,,ncomp[[i]]]
             nVar <- nVar + ncomp[[i]]
@@ -89,6 +87,4 @@ orthlspls.fit <- function(Y, X, Z, ncomp) {
 
 ## FIXME:
 ## - Change name of 'models' component to 'plsmodels'?
-## - Remove ncomp?
-## - Are scores and loadings needed?
 ## - Add fitted values?

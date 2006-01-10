@@ -47,7 +47,7 @@ orthlsplsCv <- function(Y, X, Z, ncomp, segments, ...) {
 
             ## Predict new scores and response values
             predScores <- sweep(Mpo, 2, plsM$Xmeans) %*% plsM$projection
-            ## FIXME: Only for orth.scores?
+            ## FIXME: Only for orth.scores alg:
             predVals <- array(dim = c(nrow(predScores), dim(plsM$Yloadings)))
             for (a in 1:ncomp[[ind]])
                 predVals[,,a] <-
@@ -126,7 +126,7 @@ orthlsplsCv <- function(Y, X, Z, ncomp, segments, ...) {
                 if (all(newComps == 0)) {
                     newResid <- prevRes
                 } else {
-                    lsS <- lm.fit(calScores, prevRes) # FIXME: How about intercept?
+                    lsS <- lm.fit(calScores, prevRes) # FIXME: How about intercept/numerical accurracy?
                     newResid <- lsS$residuals
                     predVals <- predScores %*% lsS$coefficients
                     rm(lsS)
