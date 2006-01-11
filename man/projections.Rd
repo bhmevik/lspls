@@ -19,16 +19,17 @@ Corth(M, N)
 }
 \details{
   \code{proj(M, N)} calculates the projection of \code{M} onto \code{N},
-  i.e., \eqn{N (N^t N)^{-1} N^t M}.
+  i.e., \eqn{N (N^t N)^{-1} N^t M}{N (N' N)^(-1) N' M}.
 
   \code{orth(M, N)} orthogonalises \code{M} with respect to \code{N},
   i.e., it calculates the projection of \code{M} onto the orthogonal
-  space of \code{N}: \eqn{M - N (N^t N)^{-1} N^t M}.
+  space of \code{N}: \eqn{M - N (N^t N)^{-1} N^t M}{M - N (N' N)^(-1) N' M}.
 
   \code{Corth(M, N)} calculates the coefficient matrix needed to
-  orthogonalise future matrices, i.e., \eqn{(N^t N)^{-1} N^t M}.  Future
+  orthogonalise future matrices, i.e.,
+  \eqn{(N^t N)^{-1} N^t M}{(N' N)^(-1) N' M}.  Future
   matrices \code{m} and \code{n} can be orthogonalised with
-  \code{m - n %*% Corth(M, N)}.
+  \code{m - n \%*\% Corth(M, N)}.
 }
 \value{
   A matrix.

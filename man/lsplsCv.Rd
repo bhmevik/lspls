@@ -1,7 +1,7 @@
 \encoding{latin1}
 \name{lsplsCv}
 \alias{lsplsCv}
-\title{Cross-validate LS-PLS models}
+\title{Cross-validate LS-PLS Models}
 \description{
   Calculate cross-validated predictions for LS-PLS models.
 }
@@ -44,7 +44,7 @@ lsplsCv(formula, ncomp, data, subset, na.action, segments = 10,
   If \code{segments} is a list, the arguments \code{segment.type} and
   \code{length.seg} are ignored.  The elements of the list should be
   integer vectors specifying the indices of the segments.  See
-  \code{\link{cvsegments}} for details.
+  \code{\link[pls]{cvsegments}} for details.
 
   Otherwise, segments of type \code{segment.type} are generated.  How
   many segments to generate is selected by specifying the number of
@@ -87,7 +87,7 @@ lsplsCv(formula, ncomp, data, subset, na.action, segments = 10,
   formula interface is experimental, and might change in future versions.  
 }
 \seealso{\code{\link{lspls}}, \code{\link{plot.lsplsCv}},
-  \code{\link{cvsegments}}, \code{\link{orthlsplsCv}}}
+  \code{\link[pls]{cvsegments}}, \code{\link{orthlsplsCv}}}
 \examples{
 ##FIXME
 }

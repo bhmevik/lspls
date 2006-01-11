@@ -1,7 +1,7 @@
 \encoding{latin1}
 \name{orthlspls.fit}
 \alias{orthlspls.fit}
-\title{Underlying LS-PLS fit function}
+\title{Underlying LS-PLS Fit Function}
 \description{
   Fits orthogonalized LS-PLS models.
 }
@@ -19,7 +19,7 @@ orthlspls.fit(Y, X, Z, ncomp)
   called by \code{\link{lspls}} to do the actual fitting.  See
   \code{\link{lspls}} for details about LS-PLS and \code{ncomp}.  Each
   element of the list \code{Z} should either be a matrix or a list of
-  parallell matrices.
+  matrices.
 }
 \value{
   A list with components
@@ -32,7 +32,7 @@ orthlspls.fit(Y, X, Z, ncomp)
   \item{ncomp}{list with the number of components used}
   \item{scores}{list of score matrices}
   \item{loadings}{list of loading matrices}
-  \item{residuals}{}
+  \item{residuals}{matrix with fit residuals, one coloumn per response}
 }
 \references{
   Jørgensen, K., Segtnan, V. H., Thyholt, K., Næs, T. (2004)  A
@@ -51,7 +51,7 @@ orthlspls.fit(Y, X, Z, ncomp)
 }
 \author{Bjørn-Helge Mevik}
 \note{
-  The interface (arguments and return values) are likely to change in
+  The interface (arguments and return values) is likely to change in
   a future version.
 }
 \seealso{\code{\link{lspls}}}

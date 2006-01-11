@@ -20,6 +20,7 @@ orthlsplsCv(Y, X, Z, ncomp, segments, \dots)
   This function is not meant to be called directly by the user.  It
   performs cross-validation of ortogonalized LS-PLS-models without
   splitting of parallell matrices into common and unique components.
+  See the references for details.
 }
 \value{
   An array of cross-validated predictions.  The first dimension

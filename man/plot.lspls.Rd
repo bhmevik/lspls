@@ -13,7 +13,7 @@ scoreplot.lspls(object, \dots)
 loadingplot.lspls(object, \dots)
 }
 \arguments{
-  \item{x, object}{Object of class "lspls".  The model to be plotted.}
+  \item{x, object}{Object of class \code{"lspls"}.  The model to be plotted.}
   \item{plottype}{character string.  What type of plot to generate.}
   \item{\dots}{Further arguments, passed on to underlying plot functions.}
 }
@@ -31,8 +31,8 @@ loadingplot.lspls(object, \dots)
   The functions return whatever the (last) underlying plot function returns.
 }
 \author{Bjørn-Helge Mevik}
-\seealso{\code{\link{lspls}}, \code{\link{scoreplot}},
-  \code{\link{loadingplot}}, \code{\link{plot.lsplsCv}}}
+\seealso{\code{\link{lspls}}, \code{\link[pls]{scoreplot}},
+  \code{\link[pls:scoreplot]{loadingplot}}, \code{\link{plot.lsplsCv}}}
 \examples{
 ##FIXME
 }
