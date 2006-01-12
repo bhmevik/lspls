@@ -13,7 +13,7 @@ squares) models.  Includes predict and plot methods.
 \tabular{ll}{
 Package: \tab lspls\cr
 Type: \tab Package\cr
-Version: \tab 0.1\cr
+Version: \tab 0.1-0\cr
 Date: \tab 2006-01-12\cr
 License: \tab GPL version 2\cr
 }

@@ -1,7 +1,7 @@
 Package: lspls
 Type: Package
 Title: LS-PLS Models
-Version: 0.1
+Version: 0.1-0
 Date: 2006-01-12
 Author: Bjørn-Helge Mevik
 Maintainer: Bjørn-Helge Mevik <bhx5@mevik.net>
