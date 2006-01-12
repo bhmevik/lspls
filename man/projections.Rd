@@ -1,6 +1,6 @@
 \encoding{latin1}
 \name{projections}
-\alias{proj}
+\alias{project}
 \alias{orth}
 \alias{Corth}
 \title{Projection and Orthogonalisation}
@@ -9,7 +9,7 @@
   against the other.
 }
 \usage{
-proj(M, N)
+project(M, N)
 orth(M, N)
 Corth(M, N)
 }
@@ -18,7 +18,7 @@ Corth(M, N)
   \item{N}{matrix to be projected onto or orthogonalised against}
 }
 \details{
-  \code{proj(M, N)} calculates the projection of \code{M} onto \code{N},
+  \code{project(M, N)} calculates the projection of \code{M} onto \code{N},
   i.e., \eqn{N (N^t N)^{-1} N^t M}{N (N' N)^(-1) N' M}.
 
   \code{orth(M, N)} orthogonalises \code{M} with respect to \code{N},

@@ -1,7 +1,7 @@
 \encoding{latin1}
 \name{lsplsCv}
 \alias{lsplsCv}
-\title{Cross-validate LS-PLS Models}
+\title{Cross-Validate LS-PLS Models}
 \description{
   Calculate cross-validated predictions for LS-PLS models.
 }
@@ -13,7 +13,7 @@ lsplsCv(formula, ncomp, data, subset, na.action, segments = 10,
 \arguments{
   \item{formula}{model formula.  See Details.}
   \item{ncomp}{list or vector of positive integers, giving the
-    number of components to use for each \sQuote{pls-matrix}.  See Details.}
+    number of components to use for each PLS matrix.  See Details.}
   \item{data}{an optional data frame with the data to fit the model from.}
   \item{subset}{an optional vector specifying a subset of observations to be
     used in the fitting process.}
@@ -34,7 +34,8 @@ lsplsCv(formula, ncomp, data, subset, na.action, segments = 10,
   The function performs a cross-validation, using the model and segments
   specified in the call.  It returns an object of class
   \code{"lsplsCv"}, which has a plot method (see
-  \code{\link{plot.lsplsCv}}).
+  \code{\link{plot.lsplsCv}}).  See \link{lspls-package} for typical
+  usage and more about LS-PLS models.
 
   See \code{\link{lspls}} for details about specifying the model
   with \code{formula} and \code{ncomp}.  Note that \code{lsplsCv}
@@ -56,7 +57,7 @@ lsplsCv(formula, ncomp, data, subset, na.action, segments = 10,
   An object of class \code{"lsplsCv"}, with components
   \item{pred}{the cross-validated predictions.  An array with one
     dimension for the observations, one for the responses, and one for
-    each of the pls-matrices.}
+    each of the PLS matrices.}
   \item{segments}{the list of segments used in the cross-validation.}
   \item{na.action}{if observations with missing values were removed,
     \code{na.action} contains a vector with their indices.}
@@ -87,7 +88,8 @@ lsplsCv(formula, ncomp, data, subset, na.action, segments = 10,
   formula interface is experimental, and might change in future versions.  
 }
 \seealso{\code{\link{lspls}}, \code{\link{plot.lsplsCv}},
-  \code{\link[pls]{cvsegments}}, \code{\link{orthlsplsCv}}}
+  \code{\link[pls]{cvsegments}}, \code{\link{orthlsplsCv}},
+  \link{lspls-package}}
 \examples{
 ##FIXME
 }

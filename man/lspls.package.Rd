@@ -14,11 +14,11 @@ squares) models.  Includes predict and plot methods.
 Package: \tab lspls\cr
 Type: \tab Package\cr
 Version: \tab 0.1\cr
-Date: \tab 2006-01-11\cr
+Date: \tab 2006-01-12\cr
 License: \tab GPL version 2\cr
 }
 LS-PLS (least squares--partial least squares) models are written on the form
-\deqn{Y = X\beta + T_1\gamma_1 + \cdots + T_k\gamma_k + E,}{Y = X\beta + T1
+\deqn{Y = X\beta + T_1\gamma_1 + \cdots + T_k\gamma_k + E,}{Y = X \beta + T1
   gamma1 + \dots + Tk gammak + E,}
 where the terms \eqn{T_i}{Ti} are one or more matrices \eqn{Z_{i,j}}{Zij}
 separated by a colon (:), i.e., \eqn{Z_{i,1} \colon Z_{i,2}\colon \cdots

@@ -1,13 +1,13 @@
 \encoding{latin1}
 \name{plot.lsplsCv}
 \alias{plot.lsplsCv}
-\title{Plot method for cross-validations}
+\title{Plot Method for Cross-Validations}
 \description{
   Plot method for \code{"lsplsCv"} objects.  It plots the
   cross-validated (R)MSEP against the total number of components.
 }
 \usage{
-\method{plot}{lsplsCv}(x, which = c("RMSEP", "MSEP"), ...)
+\method{plot}{lsplsCv}(x, which = c("RMSEP", "MSEP"), \dots)
 }
 \arguments{
   \item{x}{object of class \code{"lsplsCv"}.  Object to be plotted.
@@ -20,7 +20,7 @@
   values for all combinations of number of components.  The
   values are plotted against the total number of components.  Each point
   is labelled with the combination of number of components.  E.g., for
-  a model with three PLS-matrices, \samp{132} means one
+  a model with three PLS matrices, \samp{132} means one
   component from the first matrix, three from the second and two from
   the third.
 

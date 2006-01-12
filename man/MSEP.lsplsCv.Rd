@@ -8,8 +8,8 @@
   cross-validations (\code{"lsplsCv"} objects).
 }
 \usage{
-\method{MSEP}{lsplsCv}(object, ...)
-\method{RMSEP}{lsplsCv}(object, ...)
+\method{MSEP}{lsplsCv}(object, \dots)
+\method{RMSEP}{lsplsCv}(object, \dots)
 }
 \arguments{
   \item{object}{an \code{"lsplsCv"} object, typically the output from
@@ -19,8 +19,8 @@
 \value{
   An array.  The first dimension corresponds to the responses (for
   single-response models, the length of this dimension is 1).  The rest
-  of the dimensions correspond to the number of PLS components of the
-  \eqn{Z} matrices.
+  of the dimensions correspond to the number of components from the
+  PLS matrices.
 }
 \author{Bjørn-Helge Mevik}
 \seealso{\code{\link{lsplsCv}}, \code{\link{plot.lsplsCv}}}

@@ -1,4 +1,3 @@
-## FIXME: Chekc the assignments
 .First.lib <- function(libname, pkgname) {
     ## A small hack (MSEP should be made generic in pls):
     if (!exists("MSEP.default")) {
