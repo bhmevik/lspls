@@ -13,8 +13,8 @@ squares) models.  Includes predict and plot methods.
 \tabular{ll}{
 Package: \tab lspls\cr
 Type: \tab Package\cr
-Version: \tab 0.1-0\cr
-Date: \tab 2006-01-12\cr
+Version: \tab 0.1-1\cr
+Date: \tab 2007-04-18\cr
 License: \tab GPL version 2\cr
 }
 LS-PLS (least squares--partial least squares) models are written on the form
@@ -89,7 +89,7 @@ MSEP values explicitly, one can use the function \code{RMSEP} or
 \author{
 Bjørn-Helge Mevik
 
-Maintainer: Bjørn-Helge Mevik <bhx5@mevik.net>
+Maintainer: Bjørn-Helge Mevik <bhx6@mevik.net>
 }
 \references{
   Jørgensen, K., Segtnan, V. H., Thyholt, K., Næs, T. (2004)  A
