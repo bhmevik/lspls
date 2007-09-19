@@ -281,9 +281,9 @@ orthlspls.fit <- function(Y, X, Z, ncomp) {
          models = models, ncomp = ncomp, scores = S, loadings = L, residuals = res)
 } # function
 
-## Forenklingstanke: Gjoer om alle enkeltmatrisene i Z til lister med
+## Forenklingstanke: Gjør om alle enkeltmatrisene i Z til lister med
 ## ett element.  Da blir algoritmene enklere (og burde ikke bli
-## nevneverdig saktere).  Ved behov kan man teste paa length(M)
+## nevneverdig saktere).  Ved behov kan man teste på length(M)
 ## (f.eks. ved beregning av B og ny res).
 
 ## FIXME:
