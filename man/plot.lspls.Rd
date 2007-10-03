@@ -9,8 +9,8 @@
 }
 \usage{
 \method{plot}{lspls}(x, plottype = c("scores", "loadings"), \dots)
-scoreplot.lspls(object, \dots)
-loadingplot.lspls(object, \dots)
+\method{scoreplot}{lspls}(object, \dots)
+\method{loadingplot}{lspls}(object, \dots)
 }
 \arguments{
   \item{x, object}{Object of class \code{"lspls"}.  The model to be plotted.}
