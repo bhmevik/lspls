@@ -190,7 +190,7 @@ orthlsplsCv <- function(Y, X, Z, ncomp, segments, ...) {
                    prevComps = c(),
                    prevRes = resid)
     }
-    dimnames(cvPreds) <- c(list(1:nObs, 1:nResp),
+    dimnames(cvPreds) <- c(list(1:nObs, colnames(Y)),
                            lapply(unlist(ncomp), function(x) 0:x))
     return(cvPreds)
 } ## function

@@ -22,12 +22,16 @@ scoreplot.lspls <- function(object, ...) {
     opar <- par(no.readonly = TRUE)
     on.exit(par(opar))
     par(ask = TRUE)
+    matnames <- strsplit(attr(object$terms, "term.labels")[-1], ":")
     for (i in seq(along = object$scores)) {
         if (is.matrix(object$scores[[i]])) {
-            scoreplot(object$scores[[i]], comps = 1:object$ncomp[[i]], main = i, ...)
+            scoreplot(object$scores[[i]], comps = 1:object$ncomp[[i]],
+                      main = matnames[[i]][1], ...)
         } else {
             for (j in seq(along = object$scores[[i]])) {
-                scoreplot(object$scores[[i]][[j]], comps = 1:object$ncomp[[i]][j], main = paste(i, j, sep = "."), ...)
+                scoreplot(object$scores[[i]][[j]],
+                          comps = 1:object$ncomp[[i]][j],
+                          main = matnames[[i]][j], ...)
             }
         }
     }
@@ -42,12 +46,16 @@ loadingplot.lspls <- function(object, ...) {
     opar <- par(no.readonly = TRUE)
     on.exit(par(opar))
     par(mfrow = n2mfrow(length(unlist(object$ncomp))))
+    matnames <- strsplit(attr(object$terms, "term.labels")[-1], ":")
     for (i in seq(along = object$loadings)) {
         if (is.matrix(object$loadings[[i]])) {
-            loadingplot(object$loadings[[i]], comps = 1:object$ncomp[[i]], main = i, ...)
+            loadingplot(object$loadings[[i]], comps = 1:object$ncomp[[i]],
+                        main = matnames[[i]][1], ...)
         } else {
             for (j in seq(along = object$loadings[[i]])) {
-                loadingplot(object$loadings[[i]][[j]], comps = 1:object$ncomp[[i]][j], main = paste(i, j, sep = "."), ...)
+                loadingplot(object$loadings[[i]][[j]],
+                            comps = 1:object$ncomp[[i]][j],
+                            main = matnames[[i]][j], ...)
             }
         }
     }
@@ -80,10 +88,12 @@ plot.lsplsCv <- function(x, which = c("RMSEP", "MSEP"), ...) {
         xlab <- mXlab
         ylab <- mYlab
     }
+    respnames <-  dimnames(val)[[1]]
     val <- aperm(val, c(2:length(dim(val)), 1)) # Make "resp" the last dimension
     for (i in 1:nResp) {
         cval <- c(val)[ncombs * (i - 1) + 1:ncombs]
-        plot(ncomps, cval, type = "n", xlab = xlab, ylab = ylab, main = i, ...)
+        plot(ncomps, cval, type = "n", xlab = xlab, ylab = ylab,
+             main = respnames[i], ...)
         text(ncomps, cval, labels = complabels)
         oncomps <- min(ncomps):max(ncomps)
         minval <- numeric(length(oncomps))
