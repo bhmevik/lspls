@@ -7,8 +7,8 @@ export(
        )
 
 ## Imports:
-## FIXME: npls -> pls
-importFrom(npls, MSEP, RMSEP, scoreplot, loadingplot) # FIXME: more?
+## FIXME: more?
+importFrom(pls, MSEP, RMSEP, scoreplot, loadingplot)
 importFrom(graphics, plot)
 importFrom(stats, predict)
 
