@@ -28,7 +28,7 @@ lsplsCv(formula, ncomp, data, subset, na.action, segments = 10,
     \code{segments} is a list.}
   \item{model}{logical.  If \code{TRUE}, the model frame is returned.}
   \item{\dots}{additional arguments, passed to the underlying
-    cross-validation function.}
+    cross-validation function (currently \code{\link{orthlsplsCv}}).}
 }
 \details{
   The function performs a cross-validation, using the model and segments

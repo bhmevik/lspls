@@ -4,7 +4,7 @@
 
 ## The algorithm is based on recursion, after X has been handled.
 
-orthlsplsCv <- function(Y, X, Z, ncomp, segments, ...) {
+orthlsplsCv <- function(Y, X, Z, ncomp, segments, trace = FALSE, ...) {
 
     ## The recursive function:
     ## It uses the following variables from orthlsplsCv
@@ -172,9 +172,12 @@ orthlsplsCv <- function(Y, X, Z, ncomp, segments, ...) {
     pls.fit <- oscorespls.fit
 
     ## The main cross-validation loop
-    temp <- 0
-    for (segment in segments) {
-        cat(temp <- temp + 1, "")
+    trace <- isTRUE(trace)
+    if (trace) cat("Segment: ")
+    for (n.seg in seq_along(segments)) {
+        if (trace) cat(n.seg, "")
+        segment <- segments[[n.seg]]
+
         ## Handle X
         lsX <- lm.fit(X[-segment,, drop = FALSE], Y[-segment,, drop = FALSE])
         resid <- lsX$residuals
@@ -190,6 +193,8 @@ orthlsplsCv <- function(Y, X, Z, ncomp, segments, ...) {
                    prevComps = c(),
                    prevRes = resid)
     }
+    if (trace) cat("\n")
+
     dimnames(cvPreds) <- c(list(1:nObs, colnames(Y)),
                            lapply(unlist(ncomp), function(x) 0:x))
     return(cvPreds)
