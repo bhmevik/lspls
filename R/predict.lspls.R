@@ -18,7 +18,7 @@ predict.lspls <- function(object, newdata, type = c("response", "scores"),
             .checkMFClasses(cl, mf)
     }
     matrices <- apply(attr(tt, "factors"), 2, function(x) mf[,which(x > 0)])
-    newX <- matrices[[1]]
+    newX <- as.matrix(matrices[[1]])
     newZ <- matrices[-1]
 
     ## Parametres:
