@@ -34,6 +34,7 @@ lspls <- function(formula, ncomp, data, subset, na.action,
     z <- orthlspls.fit(Y, X, Z, ncomp, ...)
     ## Build and return the object:
     class(z) <- "lspls"
+    z$fitted.values <- Y - z$residuals
     z$na.action <- attr(mf, "na.action")
     z$ncomp <- ncomp
     z$call <- match.call()

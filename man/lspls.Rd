@@ -75,8 +75,10 @@ lspls(formula, ncomp, data, subset, na.action, model = TRUE, \dots)
 }
 \value{
   An object of class \code{"lspls"}.  The object contains all components
-  returned by the underlying fit function.  In addition, it contains the
-  following components:
+  returned by the underlying fit function (currently
+  \code{\link{orthlspls.fit}}).  In addition, it contains the following
+  components:
+  \item{fitted.values}{matrix with fitted values, one coloumn per response}
   \item{na.action}{if observations with missing values were removed,
     \code{na.action} contains a vector with their indices.}
   \item{ncomp}{the list of number of components used in the model.}
