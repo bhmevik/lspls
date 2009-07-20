@@ -8,12 +8,13 @@ export(
 
 ## Imports:
 ## FIXME: more?
-importFrom(pls, MSEP, RMSEP, scoreplot, loadingplot)
+importFrom(pls, MSEP, R2, RMSEP, scoreplot, loadingplot)
 importFrom(graphics, plot)
 importFrom(stats, predict)
 
 ## S3 methods:
 S3method(MSEP, lsplsCv)
+S3method(R2, lsplsCv)
 S3method(RMSEP, lsplsCv)
 S3method(plot, lspls)
 S3method(plot, lsplsCv)

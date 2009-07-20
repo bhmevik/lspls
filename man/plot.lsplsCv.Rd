@@ -4,28 +4,45 @@
 \title{Plot Method for Cross-Validations}
 \description{
   Plot method for \code{"lsplsCv"} objects.  It plots the
-  cross-validated (R)MSEP against the total number of components.
+  cross-validated (R)MSEP or R^2 against the total number of components.
 }
 \usage{
-\method{plot}{lsplsCv}(x, which = c("RMSEP", "MSEP"), \dots)
+\method{plot}{lsplsCv}(x, which = c("RMSEP", "MSEP", "R2"), separate = TRUE,
+        scale = !isTRUE(separate), \dots)
 }
 \arguments{
   \item{x}{object of class \code{"lsplsCv"}.  Object to be plotted.
     Typically the output from \code{\link{lsplsCv}}.}
   \item{which}{character string.  Which measure to plot.}
+  \item{separate}{logical.  Whether separate plots should be generated
+    for each response (default) or one plot with the sum of the measure
+    for all responses.}
+  \item{scale}{logical.  Whether the responses and predicted values
+    should be divided by the standard deviation of the response prior to
+    calculating the measure.  Default is to scale when producing a
+    combined plot (\code{separate = FALSE}) and not to scale otherwise.}
   \item{\dots}{Further arguments, sent to the underlying plot function.}
 }
 \details{
   The \code{plot} method generates a plot of the cross-validated (R)MSEP
-  values for all combinations of number of components.  The
+  or R^2 values for all combinations of number of components.  The
   values are plotted against the total number of components.  Each point
   is labelled with the combination of number of components.  E.g., for
   a model with three PLS matrices, \samp{132} means one
   component from the first matrix, three from the second and two from
   the third.
+  
+  Also, the lowest (R)MSEP or highest \eqn{R^2} values for each total
+  number of components are joined by a line.
 
-  Also, the lowest (R)MSEP values for each total number of components
-  are joined by a line.
+  If \code{separate} is \code{TRUE}, a separate plot panel is produced
+  for each response.  Otherwise the measure is added for all responses
+  and shown in one plot.  If \code{scale} is \code{TRUE} (the default
+  when producing a combined plot), the measures for each response are
+  standardised by dividing the responses and predicted values by the
+  standard deviation of the (corresponding) response prior to
+  calculating the measure.  Note that \code{scale} is ignored when
+  \code{which} is \code{"R2"} because \eqn{R^2} is independent of scale.)
 }
 \value{
   The function returns whatever the (last) underlying plot function

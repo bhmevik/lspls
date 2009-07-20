@@ -67,15 +67,28 @@ loadingplot.lspls <- function(object, ...) {
 ###
 ## FIXME: Should maybe be a plot method for (R)MSEP objects...
 
-plot.lsplsCv <- function(x, which = c("RMSEP", "MSEP"), ...) {
+plot.lsplsCv <- function(x, which = c("RMSEP", "MSEP", "R2"), separate = TRUE,
+                         scale = !isTRUE(separate), ...) {
     which <- match.arg(which)
-    val <- do.call(which, list(x))
+    val <- do.call(which, list(object = x, scale = scale))
+    if (!isTRUE(separate)) {
+        ## Aggregate over the responses, but keep a dummy dimension for
+        ## the response (it simplifies the code below):
+        dims <- c(1, dim(val)[-1])
+        dns <- c(resp = "all responses", dimnames(val)[-1])
+        if (which == "R2") {
+            val <- array(colMeans(val), dim = dims, dimnames = dns)
+        } else {
+            ## FIXME: For RMSEP: take sqrt(colSums(MSEP))?
+            val <- array(colSums(val), dim = dims, dimnames = dns)
+        }
+    }
     comps <- expand.grid(lapply(dimnames(val)[-1], as.numeric))
     ncomps <- rowSums(comps)
     ncombs <- nrow(comps)
     complabels <- apply(comps, 1, paste, collapse = "")
     mXlab <- "total number of components"
-    mYlab <- which
+    mYlab <- if (isTRUE(scale)) paste(which, "(std. resp.)") else which
     nResp <- dim(val)[1]
     if (nResp > 1) {
         opar <- par(no.readonly = TRUE)
@@ -96,10 +109,11 @@ plot.lsplsCv <- function(x, which = c("RMSEP", "MSEP"), ...) {
              main = respnames[i], ...)
         text(ncomps, cval, labels = complabels)
         oncomps <- min(ncomps):max(ncomps)
-        minval <- numeric(length(oncomps))
+        bestval <- numeric(length(oncomps))
         for (i in seq(along = oncomps))
-            minval[i] <- min(cval[ncomps == oncomps[i]])
-        lines(oncomps, minval, lty = 2, col = 2)
+            bestval[i] <- if (which == "R2") max(cval[ncomps == oncomps[i]])
+                          else min(cval[ncomps == oncomps[i]])
+        lines(oncomps, bestval, lty = 2, col = 2)
     } ## for
     if (nResp > 1) {
         ## Add outer margin text:
