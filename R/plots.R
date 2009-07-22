@@ -67,8 +67,8 @@ loadingplot.lspls <- function(object, ...) {
 ###
 ## FIXME: Should maybe be a plot method for (R)MSEP objects...
 
-plot.lsplsCv <- function(x, which = c("RMSEP", "MSEP", "R2"), separate = TRUE,
-                         scale = !isTRUE(separate), ...) {
+plot.lsplsCv <- function(x, which = c("RMSEP", "MSEP", "R2"), ncomp,
+                         separate = TRUE, scale = !isTRUE(separate), ...) {
     which <- match.arg(which)
     val <- do.call(which, list(object = x, scale = scale))
     if (!isTRUE(separate)) {
@@ -87,7 +87,7 @@ plot.lsplsCv <- function(x, which = c("RMSEP", "MSEP", "R2"), separate = TRUE,
     ncomps <- rowSums(comps)
     ncombs <- nrow(comps)
     complabels <- apply(comps, 1, paste, collapse = "")
-    mXlab <- "total number of components"
+    mXlab <- if(missing(ncomp)) "total number of components" else "matrix"
     mYlab <- if (isTRUE(scale)) paste(which, "(std. resp.)") else which
     nResp <- dim(val)[1]
     if (nResp > 1) {
@@ -102,19 +102,44 @@ plot.lsplsCv <- function(x, which = c("RMSEP", "MSEP", "R2"), separate = TRUE,
         ylab <- mYlab
     }
     respnames <-  dimnames(val)[[1]]
-    val <- aperm(val, c(2:length(dim(val)), 1)) # Make "resp" the last dimension
-    for (i in 1:nResp) {
-        cval <- c(val)[ncombs * (i - 1) + 1:ncombs]
-        plot(ncomps, cval, type = "n", xlab = xlab, ylab = ylab,
-             main = respnames[i], ...)
-        text(ncomps, cval, labels = complabels)
-        oncomps <- min(ncomps):max(ncomps)
-        bestval <- numeric(length(oncomps))
-        for (i in seq(along = oncomps))
-            bestval[i] <- if (which == "R2") max(cval[ncomps == oncomps[i]])
-                          else min(cval[ncomps == oncomps[i]])
-        lines(oncomps, bestval, lty = 2, col = 2)
-    } ## for
+    if (missing(ncomp)) {
+        val <- aperm(val, c(2:length(dim(val)), 1)) # Make "resp" the last dimension
+        for (i in 1:nResp) {
+            cval <- c(val)[ncombs * (i - 1) + 1:ncombs]
+            plot(ncomps, cval, type = "n", xlab = xlab, ylab = ylab,
+                 main = respnames[i], ...)
+            text(ncomps, cval, labels = complabels)
+            oncomps <- min(ncomps):max(ncomps)
+            bestval <- numeric(length(oncomps))
+            for (i in seq(along = oncomps))
+                bestval[i] <- if (which == "R2") max(cval[ncomps == oncomps[i]])
+                              else min(cval[ncomps == oncomps[i]])
+            lines(oncomps, bestval, lty = 2, col = 2)
+        } ## for
+    } else {
+        ## Extract a matrix with measure values versus the matrices included,
+        ## for the specified number of components
+        nMat <- length(ncomp) + 1
+        matNames <- attr(terms(x), "term.labels")
+        if(nMat != length(matNames))
+            stop("'ncomp' must contain ", length(matNames) - 1, " elements")
+        plotVals <- matrix(nrow = nResp, ncol = nMat)
+        valInds <- as.list(rep(1, length(unlist(ncomp)))) # Indices into val
+        plotVals[,1] <- do.call("[", c(list(val, 1:nResp), valInds))
+        l <- 0                          # index into valInds
+        for (j in seq_along(ncomp)) {
+            for(k in seq_along(ncomp[[j]])) {
+                l <- l + 1
+                valInds[[l]] <- ncomp[[j]][k] + 1
+            }
+            plotVals[,j+1] <- do.call("[", c(list(val, 1:nResp), valInds))
+        }
+        for (i in 1:nResp) {
+            plot(plotVals[i,], type = "b", xlab = xlab, ylab = ylab,
+                 main = respnames[i], xaxt = "n", ...)
+            axis(1, at = seq_along(matNames), labels = matNames)
+        }
+    } # if (missing(ncomp)) ... else
     if (nResp > 1) {
         ## Add outer margin text:
         mtext(mXlab, side = 1, outer = TRUE)
