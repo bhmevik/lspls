@@ -65,7 +65,6 @@ loadingplot.lspls <- function(object, ...) {
 ###
 ### Plot method for lsplsCv objects:
 ###
-## FIXME: Should maybe be a plot method for (R)MSEP objects...
 
 plot.lsplsCv <- function(x, which = c("RMSEP", "MSEP", "R2"), ncomp,
                          separate = TRUE, scale = !isTRUE(separate), ...) {
@@ -78,8 +77,11 @@ plot.lsplsCv <- function(x, which = c("RMSEP", "MSEP", "R2"), ncomp,
         dns <- c(resp = "all responses", dimnames(val)[-1])
         if (which == "R2") {
             val <- array(colMeans(val), dim = dims, dimnames = dns)
+        } else if (which == "RMSEP") {
+            ## Dirty hack to get sqrt(sum(MSEP)) instead of sum(sqrt(MSEP)):
+            val <- do.call("MSEP", list(object = x, scale = scale))
+            val <- array(sqrt(colSums(val)), dim = dims, dimnames = dns)
         } else {
-            ## FIXME: For RMSEP: take sqrt(colSums(MSEP))?
             val <- array(colSums(val), dim = dims, dimnames = dns)
         }
     }
