@@ -1,12 +1,12 @@
 Package: lspls
 Type: Package
 Title: LS-PLS Models
-Version: 0.2-0
+Version: 0.2-1
 Date: 2011-10-20
 Author: Bjørn-Helge Mevik
 Maintainer: Bjørn-Helge Mevik <bhx6@mevik.net>
 Encoding: latin1
-Depends: pls
+Depends: pls (>= 2.2.0)
 Description: Implements the LS-PLS (least squares - partial least squares)
   method described in for instance Jørgensen, K., Segtnan, V. H., Thyholt, K.,
   Næs, T. (2004)  A Comparison of Methods for Analysing Regression Models with
