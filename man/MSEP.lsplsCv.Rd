@@ -32,7 +32,5 @@
 }
 \author{Bjørn-Helge Mevik}
 \seealso{\code{\link{lsplsCv}}, \code{\link{plot.lsplsCv}}}
-\examples{
-}
 \keyword{multivariate}
 \keyword{regression}
