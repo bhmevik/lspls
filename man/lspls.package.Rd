@@ -3,20 +3,16 @@
 \alias{lspls-package}
 \docType{package}
 \title{
-LS-PLS (Least Squares--Partial Least Squares) Models
+\packageTitle{lspls}
 }
 \description{
-Functions to fit and validate LS-PLS (least squares--partial least
-squares) models.  Includes predict and plot methods.
+\packageDescription{lspls}
 }
 \details{
-\tabular{ll}{
-Package: \tab lspls\cr
-Type: \tab Package\cr
-Version: \tab 0.1-1\cr
-Date: \tab 2007-04-18\cr
-License: \tab GPL version 2\cr
-}
+The DESCRIPTION file:
+\packageDESCRIPTION{lspls}
+\packageIndices{lspls}
+
 LS-PLS (least squares--partial least squares) models are written on the form
 \deqn{Y = X\beta + T_1\gamma_1 + \cdots + T_k\gamma_k + E,}{Y = X \beta + T1
   gamma1 + \dots + Tk gammak + E,}
@@ -89,9 +85,9 @@ MSEP values explicitly, one can use the function \code{RMSEP} or
 \code{MSEP}.
 }
 \author{
-Bjørn-Helge Mevik
+\packageAuthor{lspls}
 
-Maintainer: Bjørn-Helge Mevik <bhx6@mevik.net>
+Maintainer: \packageMaintainer{lspls}
 }
 \references{
   Jørgensen, K., Segtnan, V. H., Thyholt, K., Næs, T. (2004)  A
