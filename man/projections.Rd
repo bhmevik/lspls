@@ -1,4 +1,4 @@
-\encoding{latin1}
+\encoding{UTF-8}
 \name{projections}
 \alias{project}
 \alias{orth}
@@ -34,7 +34,7 @@ Corth(M, N)
 \value{
   A matrix.
 }
-\author{Bjørn-Helge Mevik}
+\author{BjÃ¸rn-Helge Mevik}
 \note{
   The functions need to be opitmised, both for speed and numerical
   accurracy.

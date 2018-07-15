@@ -1,4 +1,4 @@
-\encoding{latin1}
+\encoding{UTF-8}
 \name{plot.lspls}
 \alias{plot.lspls}
 \alias{scoreplot.lspls}
@@ -30,7 +30,7 @@
 \value{
   The functions return whatever the (last) underlying plot function returns.
 }
-\author{Bjørn-Helge Mevik}
+\author{BjÃ¸rn-Helge Mevik}
 \seealso{\code{\link{lspls}}, \code{\link[pls]{scoreplot}},
   \code{\link[pls:scoreplot]{loadingplot}}, \code{\link{plot.lsplsCv}}}
 \examples{

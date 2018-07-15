@@ -1,4 +1,4 @@
-\encoding{latin1}
+\encoding{UTF-8}
 \name{lspls}
 \alias{lspls}
 \title{Fit LS-PLS Models}
@@ -87,21 +87,21 @@ lspls(formula, ncomp, data, subset, na.action, model = TRUE, \dots)
   \item{model}{if \code{model = TRUE}, the model frame.}
 }
 \references{
-  Jørgensen, K., Segtnan, V. H., Thyholt, K., Næs, T. (2004)  A
+  JÃ¸rgensen, K., Segtnan, V. H., Thyholt, K., NÃ¦s, T. (2004)  A
   Comparison of Methods for Analysing Regression Models with Both
   Spectral and Designed Variables.
   \emph{Journal of Chemometrics}, \bold{18}(10), 451--464.
 
-  Jørgensen, K., Mevik, B.-H., Næs, T.  Combining Designed Experiments
+  JÃ¸rgensen, K., Mevik, B.-H., NÃ¦s, T.  Combining Designed Experiments
   with Several Blocks of Spectroscopic Data.
   (Submitted)
 
-  Mevik, B.-H., Jørgensen, K., Måge, I., Næs, T.  LS-PLS: Combining
+  Mevik, B.-H., JÃ¸rgensen, K., MÃ¥ge, I., NÃ¦s, T.  LS-PLS: Combining
   Categorical Design Variables with Blocks of Spectroscopic
   Measurements.
   (Submitted)
 }
-\author{Bjørn-Helge Mevik}
+\author{BjÃ¸rn-Helge Mevik}
 \note{
   The user interface (e.g. the model handling) is experimental, and
   might well change in later versions.

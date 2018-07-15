@@ -1,4 +1,4 @@
-\encoding{latin1}
+\encoding{UTF-8}
 \name{lspls-package}
 \alias{lspls-package}
 \docType{package}
@@ -89,21 +89,21 @@ MSEP values explicitly, one can use the function \code{RMSEP} or
 \code{MSEP}.
 }
 \author{
-Bjørn-Helge Mevik
+BjÃ¸rn-Helge Mevik
 
-Maintainer: Bjørn-Helge Mevik <bhx6@mevik.net>
+Maintainer: BjÃ¸rn-Helge Mevik <bhx6@mevik.net>
 }
 \references{
-  Jørgensen, K., Segtnan, V. H., Thyholt, K., Næs, T. (2004)  A
+  JÃ¸rgensen, K., Segtnan, V. H., Thyholt, K., NÃ¦s, T. (2004)  A
   Comparison of Methods for Analysing Regression Models with Both
   Spectral and Designed Variables.
   \emph{Journal of Chemometrics}, \bold{18}(10), 451--464.
 
-  Jørgensen, K., Mevik, B.-H., Næs, T.  Combining Designed Experiments
+  JÃ¸rgensen, K., Mevik, B.-H., NÃ¦s, T.  Combining Designed Experiments
   with Several Blocks of Spectroscopic Data.
   (Submitted)
 
-  Mevik, B.-H., Jørgensen, K., Måge, I., Næs, T.  LS-PLS: Combining
+  Mevik, B.-H., JÃ¸rgensen, K., MÃ¥ge, I., NÃ¦s, T.  LS-PLS: Combining
   Categorical Design Variables with Blocks of Spectroscopic
   Measurements.
   (Submitted)

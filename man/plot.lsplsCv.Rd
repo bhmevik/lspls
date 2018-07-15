@@ -1,4 +1,4 @@
-\encoding{latin1}
+\encoding{UTF-8}
 \name{plot.lsplsCv}
 \alias{plot.lsplsCv}
 \title{Plot Method for Cross-Validations}
@@ -60,7 +60,7 @@
   The function returns whatever the (last) underlying plot function
   returns.
 }
-\author{Bjørn-Helge Mevik}
+\author{BjÃ¸rn-Helge Mevik}
 \seealso{\code{\link{lsplsCv}}, \code{\link{lspls}}}
 \examples{
 ##FIXME

@@ -3,13 +3,13 @@ Type: Package
 Title: LS-PLS Models
 Version: 0.2-1
 Date: 2011-10-20
-Author: Bjørn-Helge Mevik
-Maintainer: Bjørn-Helge Mevik <bhx6@mevik.net>
-Encoding: latin1
+Author: BjÃ¸rn-Helge Mevik
+Maintainer: BjÃ¸rn-Helge Mevik <bhx6@mevik.net>
+Encoding: UTF-8
 Depends: pls (>= 2.2.0)
 Description: Implements the LS-PLS (least squares - partial least squares)
-  method described in for instance Jørgensen, K., Segtnan, V. H., Thyholt, K.,
-  Næs, T. (2004)  A Comparison of Methods for Analysing Regression Models with
+  method described in for instance JÃ¸rgensen, K., Segtnan, V. H., Thyholt, K.,
+  NÃ¦s, T. (2004)  A Comparison of Methods for Analysing Regression Models with
   Both Spectral and Designed Variables.
   Journal of Chemometrics, 18(10), 451--464.
 License: GPL version 2

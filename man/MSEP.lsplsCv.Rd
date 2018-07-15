@@ -1,4 +1,4 @@
-\encoding{latin1}
+\encoding{UTF-8}
 \name{MSEP.lsplsCv}
 \alias{MSEP.lsplsCv}
 \alias{RMSEP.lsplsCv}
@@ -30,7 +30,7 @@
   of the dimensions correspond to the number of components from the
   PLS matrices.
 }
-\author{Bjørn-Helge Mevik}
+\author{BjÃ¸rn-Helge Mevik}
 \seealso{\code{\link{lsplsCv}}, \code{\link{plot.lsplsCv}}}
 \keyword{multivariate}
 \keyword{regression}
