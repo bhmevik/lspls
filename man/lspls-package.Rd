@@ -60,7 +60,7 @@ regression, and \code{plot(mod, "loadings")} gives loading plots.
 
 There is a \code{predict} method to predict response or score values
 from new data
-\preformatter{
+\preformatted{
 predict(mod, newdata = mynewdata)
 }
 (This predicts response values.  Use \code{type = "scores"} to get
