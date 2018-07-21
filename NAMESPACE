@@ -7,10 +7,14 @@ export(
        )
 
 ## Imports:
-## FIXME: more?
-importFrom(pls, MSEP, R2, RMSEP, scoreplot, loadingplot)
-importFrom(graphics, plot)
-importFrom(stats, predict)
+importFrom("grDevices", "n2mfrow")
+importFrom("graphics", "axis", "lines", "mtext", "par", "plot", "text")
+importFrom("methods", "Quote")
+importFrom("pls", "cvsegments", "loadingplot", "MSEP", "oscorespls.fit", "R2",
+           "RMSEP", "scoreplot")
+importFrom("stats", ".checkMFClasses", "delete.response", "lm.fit",
+           "model.frame", "model.response", "na.pass", "predict", "sd",
+           "terms", "var")
 
 ## S3 methods:
 S3method(MSEP, lsplsCv)

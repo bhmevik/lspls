@@ -30,7 +30,7 @@ lspls(formula, ncomp, data, subset, na.action, model = TRUE, \dots)
   \link{lspls-package} or the references for more details, and
   \link{lspls-package} for typical usage.
 
-  The model formula is specified as \samp{\var{resp} ~ \var{term1} +
+  The model formula is specified as \code{\var{resp} ~ \var{term1} +
     \var{term2} + \dots}.  If \var{resp} is a matrix (with more than one
   coloumn), a multi-response model is fitted.  \var{term1} specifies the
   first matrix to be fitted, using LS.  Each of the remaining terms will

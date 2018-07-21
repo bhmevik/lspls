@@ -59,10 +59,13 @@ implemented.  \code{plot(mod, "scores")} gives score plots for each PLS
 regression, and \code{plot(mod, "loadings")} gives loading plots.
 
 There is a \code{predict} method to predict response or score values
-from new data: \code{predict(mod, newdata = mynewdata)}.  (This predicts
-response values.  Use \code{type = "scores"} to get scores.)  Also, the
-standard functions \code{resid} and \code{fitted} can be used to extract
-the residuals and fitted values.
+from new data
+\preformatter{
+predict(mod, newdata = mynewdata)
+}
+(This predicts response values.  Use \code{type = "scores"} to get
+scores.)  Also, the standard functions \code{resid} and \code{fitted}
+can be used to extract the residuals and fitted values.
 
 In order to determine the number of components to use from each matrix,
 one can use cross-validation:
@@ -104,7 +107,7 @@ Maintainer: \packageMaintainer{lspls}
   Measurements.
   (Submitted)
 }
-\keyword{ package }
+\keyword{package}
 \keyword{multivariate}
 \keyword{regression}
 \seealso{
