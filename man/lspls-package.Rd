@@ -40,8 +40,8 @@ usage to fit the model
   + W \theta + E}{Y = X\beta + Z gamma + V1:V2 eta + W theta + E}
 would be
 \preformatted{
-mod <- lspls(y ~ X + Z + V1:V2 + W, ncomp = list(3, c(2,1), 2),
-             data = mydata)
+  mod <- lspls(y ~ X + Z + V1:V2 + W, ncomp = list(3, c(2,1), 2),
+               data = mydata)
 }
 The first argument is the formula describing the model.
 \code{X} is fit first, using LS.  Then PLS scores from \code{Z}
@@ -61,7 +61,7 @@ regression, and \code{plot(mod, "loadings")} gives loading plots.
 There is a \code{predict} method to predict response or score values
 from new data
 \preformatted{
-predict(mod, newdata = mynewdata)
+  predict(mod, newdata = mynewdata)
 }
 (This predicts response values.  Use \code{type = "scores"} to get
 scores.)  Also, the standard functions \code{resid} and \code{fitted}
@@ -70,8 +70,8 @@ can be used to extract the residuals and fitted values.
 In order to determine the number of components to use from each matrix,
 one can use cross-validation:
 \preformatted{
-cvmod <- lsplsCv(y ~ X + Z + V1:V2 + W, ncomp = list(4, c(3,4), 3),
-                 segments = 12, data = mydata)
+  cvmod <- lsplsCv(y ~ X + Z + V1:V2 + W, ncomp = list(4, c(3,4), 3),
+                   segments = 12, data = mydata)
 }
 In \code{lsplsCv}, \code{ncomp} gives the maximal number of components to
 test.  The argument \code{segments} specifies the number of segments to
